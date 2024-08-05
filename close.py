@@ -1,4 +1,4 @@
 import webbrowser
 import os
 
-webbrowser.open()
+webbrowser.open('https://screen-leash.github.io/')
