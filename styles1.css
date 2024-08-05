@@ -1,0 +1,718 @@
+/* Basic styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #e8f5e9; /* Light background color */
+    color: #333333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode {
+    background-color: #121212; /* Dark background color */
+    color: #e0e0e0;
+}
+
+/* Container styles */
+.container {
+    text-align: center;
+    background-color: #ffffff; /* Light background for container */
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    width: 300px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode .container {
+    background-color: #1e1e1e; /* Dark background for container in dark mode */
+}
+
+/* Heading styles */
+h1 {
+    color: #4caf50; /* Green color */
+    margin-bottom: 1px;
+}
+
+#cancel-time-change{
+    background-color: #f44336; /* Red */
+    color: white;
+    border-radius: 10px;
+    border:none;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#cancel-time-change:hover{
+    background-color: #d32f2f; 
+}
+
+body.dark-mode h1 {
+    color: #bb86fc; /* Light purple color in dark mode */
+}
+
+/* Input and button styles */
+.input-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    margin-bottom: 8px;
+}
+
+#duration {
+    padding: 8px;
+    border: 1px solid #4caf50; /* Green border */
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #333333;
+    margin-bottom: 10px; /* Space between input and buttons */
+    width: 55%; /* Full width */
+}
+
+body.dark-mode #duration {
+    border: 1px solid #bb86fc; /* Purple border in dark mode */
+    background-color: #333333;
+    color: #e0e0e0;
+}
+
+#add-timer,
+#reduce-timer {
+    padding: 8px 16px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px; /* Space between buttons */
+}
+
+#add-timer {
+    background-color: #4caf50; /* Green button */
+}
+
+body.dark-mode #add-timer {
+    background-color: #6200ea; /* Purple button in dark mode */
+}
+
+#add-timer:hover {
+    background-color: #388e3c; /* Darker green on hover */
+}
+
+body.dark-mode #add-timer:hover {
+    background-color: #3700b3; /* Darker purple on hover in dark mode */
+}
+
+#reduce-timer {
+    background-color: #f44336; /* Red button */
+}
+
+body.dark-mode #reduce-timer {
+    background-color: #d32f2f; /* Darker red button in dark mode */
+}
+
+#reduce-timer:hover {
+    background-color: #c62828; /* Darker red on hover */
+}
+
+body.dark-mode #reduce-timer:hover {
+    background-color: #b71c1c; /* Even darker red on hover in dark mode */
+}
+
+/* Timer display styles */
+#timer-display {
+    font-size: 1.7em; /* Fixed font size */
+    padding: 10px;
+    background-color: #ffffff; /* Light background for timer */
+    border: 2px solid #4caf50; /* Green border */
+    border-radius: 8px;
+    text-align: center;
+    width: 200px; /* Fixed width */
+    height: 40px; /* Fixed height */
+    color: #4caf50; /* Green text */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    margin: 0 auto; /* Center horizontally */
+    display: block; /* Center horizontally */
+    margin-bottom: 8px;
+}
+
+body.dark-mode #timer-display {
+    background-color: #333333; /* Dark background for timer in dark mode */
+    border: 2px solid #bb86fc; /* Purple border in dark mode */
+    color: #bb86fc; /* Purple text in dark mode */
+}
+
+/* Overlay styles */
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 9999;
+}
+
+body.dark-mode #overlay {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Overlay styles */
+#overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+    color: white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 9999; /* On top of other elements */
+}
+
+body.dark-mode #overlay {
+    background-color: rgba(0, 0, 0, 0.9); /* Darker background in dark mode */
+}
+
+.overlay-content {
+    background-color: #f5f5f5; /* Light background for content */
+    color: #333333;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    max-width: 600px;
+    margin: auto;
+    position: relative;
+    overflow-y: auto;
+    height: 80vh; /* Adjust height as needed */
+}
+
+body.dark-mode .overlay-content {
+    background-color: #444444; /* Dark background for content in dark mode */
+    color: #e0e0e0;
+}
+
+#overlay-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #4caf50; /* Green color for title */
+}
+
+body.dark-mode #overlay-title {
+    color: #bb86fc; /* Light purple color in dark mode */
+}
+
+#overlay-message {
+    margin-bottom: 20px;
+}
+
+#unlock-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #f44336; /* Red color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+body.dark-mode #unlock-button {
+    background-color: #d32f2f; /* Teal color in dark mode */
+}
+
+#unlock-button:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+}
+
+body.dark-mode #unlock-button:hover {
+    background-color: #d32f2f; /* Darker teal on hover */
+}
+
+#unlock-button.finished {
+    background-color: #4caf50; /* Green color */
+}
+
+body.dark-mode #unlock-button.finished {
+    background-color: #4caf50; /* Green color */
+}
+
+/* Activity suggestions styles */
+#activity-suggestions {
+    margin-top: 20px;
+}
+
+#activity-suggestions h3 {
+    margin-bottom: 15px;
+    color: #4caf50; /* Green color */
+}
+
+body.dark-mode #activity-suggestions h3 {
+    color: #bb86fc; /* Light purple color in dark mode */
+}
+
+.activity {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    background-color: #ffffff; /* Light background for activities */
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .activity {
+    background-color: #333333; /* Dark background for activities in dark mode */
+}
+
+.activity img {
+    width: 100px; /* Adjust size as needed */
+    height: 100px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.activity p {
+    font-size: 1em;
+    margin: 0;
+}
+
+#stop-sound-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #f44336; /* Red background color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+body.dark-mode #stop-sound-button {
+    background-color: #bb86fc; /* Purple color in dark mode */
+}
+
+#stop-sound-button:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+}
+
+body.dark-mode #stop-sound-button:hover {
+    background-color: #3700b3; /* Darker purple on hover in dark mode */
+}
+
+#unlock-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #f44336; /* Red color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+body.dark-mode #unlock-button {
+    background-color: #d32f2f; /* Teal color in dark mode */
+}
+
+#unlock-button:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+}
+
+body.dark-mode #unlock-button:hover {
+    background-color: #d32f2f; /* Darker teal on hover */
+}
+
+#unlock-button.finished {
+    background-color: #4caf50; /* Green color */
+}
+
+body.dark-mode #unlock-button.finished {
+    background-color: #4caf50; /* Green color */
+}
+
+/* Confirmation message styles */
+#confirmation-message {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 10001;
+}
+
+.confirmation-content {
+    background-color: #333333;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+#confirm-add-time,
+#confirm-reduce-time,
+#confirm-unlock,
+#cancel-add-time,
+#cancel-reduce-time,
+#cancel-unlock {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#confirm-add-time,
+#confirm-reduce-time {
+    background-color: #4caf50; /* Mint green */
+    color: white;
+}
+
+#cancel-add-time,
+#cancel-reduce-time {
+    background-color: #f44336; /* Red */
+    color: white;
+}
+
+#confirm-add-time:hover,
+#confirm-reduce-time:hover {
+    background-color: #388e3c; /* Darker mint green */
+}
+
+#cancel-add-time:hover,
+#cancel-reduce-time:hover {
+    background-color: #d32f2f; /* Darker red */
+}
+
+/* Specific cancel button styles */
+#cancel-unlock {
+    background-color: #f44336; /* Red color */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#confirm-unlock {
+    background-color: #4caf50; /* Green color */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#cancel-unlock:hover {
+    background-color: #d32f2f; /* Darker red */
+}
+
+#confirm-unlock:hover {
+    background-color: #388e3c; /* Darker green */
+}
+
+/* Notification bell styles */
+#notification-bell {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    background-color: #4caf50; /* Green color */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+}
+
+body.dark-mode #notification-bell {
+    background-color: #bb86fc; /* Purple color in dark mode */
+}
+
+#notification-bell:hover {
+    background-color: #388e3c; /* Darker green on hover */
+}
+
+body.dark-mode #notification-bell:hover {
+    background-color: #3700b3; /* Darker purple on hover in dark mode */
+}
+
+#notification-bell .bell-icon {
+    font-size: 24px;
+}
+
+/* Notification popup styles */
+#notification-popup {
+    display: none;
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    background-color: #ffffff;
+    color: #333333;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 10001;
+    width: 250px;
+}
+
+body.dark-mode #notification-popup {
+    background-color: #333333; /* Dark background for popup in dark mode */
+    color: #e0e0e0; /* Light text color */
+}
+
+#notification-popup button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #4caf50; /* Green color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+body.dark-mode #notification-popup button {
+    background-color: #6200ea; /* Purple color in dark mode */
+}
+
+#notification-popup button:hover {
+    background-color: #388e3c; /* Darker green on hover */
+}
+
+body.dark-mode #notification-popup button:hover {
+    background-color: #3700b3; /* Darker purple on hover in dark mode */
+}
+
+/* Navigation bar styles */
+.navbar {
+    background-color: #4caf50; /* Green background */
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+body.dark-mode .navbar {
+    background-color: #bb86fc; /* Purple background in dark mode */
+}
+
+.navbar h2 {
+    color: white;
+    margin: 0;
+    font-size: 1.5em;
+}
+
+#toggle-theme {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4caf50; /* Green color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+body.dark-mode #toggle-theme {
+    background-color: #6200ea; /* Purple color in dark mode */
+}
+
+#toggle-theme:hover {
+    background-color: #388e3c; /* Darker green on hover */
+}
+
+body.dark-mode #toggle-theme:hover {
+    background-color: #3700b3; /* Darker purple on hover in dark mode */
+}
+
+/* Reset default margin and padding */
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+/* Navigation Bar Styles */
+.navbar {
+    display: flex;
+    align-items: center;
+    position: fixed; /* Fixed position to keep it at the top left */
+    top: 0;
+    left: 0;
+    background-color: #f0f0f0; /* Background color of the navbar */
+    padding: 10px 20px; /* Padding around the navbar */
+    z-index: 1000; /* Ensure it stays above other content */
+    width: 100%; /* Make the navbar full-width */
+    box-sizing: border-box; /* Include padding and border in the element’s total width and height */
+}
+
+.logo {
+    margin-right: 20px; /* Space between the logo and the buttons */
+}
+
+.logo img {
+    height: 50px; /* Adjust based on your logo size */
+    width: auto;
+}
+
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between buttons */
+}
+
+.nav-button {
+    text-decoration: none;
+    padding: 10px 15px;
+    color: #333; /* Text color */
+    background-color: #e0e0e0; /* Background color of buttons */
+    border-radius: 5px; /* Rounded corners */
+    font-weight: bold;
+}
+
+.nav-button:hover {
+    background-color: #ccc; /* Change background on hover */
+}
+
+/* Default (Light Mode) */
+body {
+    background-color: #ffffff; /* Light mode background color */
+    color: #000000; /* Light mode text color */
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #f0f0f0; /* Light mode background */
+    color: #333; /* Light mode text color */
+    border-top: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+.footer-logo img {
+    height: 40px; /* Adjust based on your logo size */
+    width: auto;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer-text {
+    margin: 0;
+    font-weight: bold;
+    padding: 10px;
+    background-color: #e0e0e0; /* Light mode background for text block */
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Style for footer links as blocks */
+.social-media {
+    display: flex;
+    gap: 10px;
+}
+
+.social-link {
+    text-decoration: none;
+    color: #333; /* Light mode link color */
+    font-weight: bold;
+    display: block;
+    padding: 10px;
+    background-color: #e0e0e0; /* Light mode background for blocks */
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.social-link:hover {
+    background-color: #ccc; /* Light mode background on hover */
+    color: #000; /* Light mode text color on hover */
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #121212; /* Dark mode background color */
+    color: #ffffff; /* Dark mode text color */
+}
+
+body.dark-mode .footer {
+    background-color: #bb86fc; /* Dark mode background */
+    color: #ccc; /* Dark mode text color */
+    border-top: 1px solid #444;
+}
+
+body.dark-mode .footer-logo img {
+    height: 40px; /* Adjust based on your logo size */
+    width: auto;
+}
+
+body.dark-mode .footer-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+body.dark-mode .footer-text {
+    margin: 0;
+    font-weight: bold;
+    padding: 10px;
+    background-color: #555; /* Dark mode background for text block */
+    border-radius: 5px;
+    text-align: center;
+}
+
+body.dark-mode .social-media {
+    display: flex;
+    gap: 10px;
+}
+
+body.dark-mode .social-link {
+    text-decoration: none;
+    color: #ccc; /* Dark mode link color */
+    font-weight: bold;
+    display: block;
+    padding: 10px;
+    background-color: #555; /* Dark mode background for blocks */
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode .social-link:hover {
+    background-color: #666; /* Dark mode background on hover */
+    color: #fff; /* Dark mode text color on hover */
+}
+

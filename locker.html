@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Screen Locker</title>
+    <link rel="icon" href="images/teamlogo.jpg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="images/team-logo.png" alt="Team Logo">
+        </div>
+        <div class="nav-buttons">
+            <a href="limiter.html" class="nav-button">Screen Limiter</a>
+            <a href="locker.html" class="nav-button">Screen Locker</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Device Screen Locker</h1>
+        <div class="input-group">
+            <label for="duration">Set Duration (minutes):</label>
+            <input type="number" id="duration" min="1">
+            <button id="start-timer">Start Timer</button>
+        </div>
+        <button id="toggle-theme">Switch to Dark Mode</button>
+    </div>
+
+    <div id="overlay" class="hidden">
+        <div class="overlay-content">
+            <h2 id="overlay-title">Device is Locked</h2>
+            <p id="overlay-message">You can do other activities while the device is locked.</p>
+            <div id="timer-display-overlay">00m 00s</div>
+            <button id="unlock-button">Unlock and Finish Current Timer</button>
+            <button id="stop-sound-button" class="hidden">Stop Sound</button>
+            <!-- New activity suggestions section -->
+            <div id="activity-suggestions">
+                <h3>Suggestions for Activities</h3>
+                <div class="activity">
+                    <img src="images/stretching.jpg" alt="Stretching">
+                    <p>Stretching exercises to keep you flexible.</p>
+                </div>
+                <div class="activity">
+                    <img src="images/Reading.png" alt="Reading">
+                    <p>Read a book or an article to relax your mind.</p>
+                </div>
+                <div class="activity">
+                    <img src="images/walking.jpg" alt="Walking">
+                    <p>Go for a walk or take a short jog to stay active.</p>
+                </div>
+                <div class="activity">
+                    <img src="images/meditation.jpg" alt="Meditation">
+                    <p>Practice meditation or deep breathing exercises.</p>
+                </div>
+                <div class="activity">
+                    <img src="images/cooking.jpg" alt="Cooking">
+                    <p>Try out a new recipe or prepare a healthy meal.</p>
+                </div>
+                <div class="activity">
+                    <a href="https://www.alahlyegypt.com/en" target="_blank">
+                        <img src="images/sponsored1.png" alt="Al Ahly">
+                    </a>
+                    <p>Visit Al Ahly club!</p>
+                </div>           
+                <div class="activity">
+                        <p>This week offer: Lock your device for 12 hours to get a day ticket for free and visit Al Ahly club!</p>
+                </div>
+                <div class="activity">
+                    <a href="https://www.facebook.com/pages/%D9%85%D9%83%D8%AA%D8%A8%D8%A9-%D8%B4%D8%A8%D8%B1%D8%A7-%D8%A7%D9%84%D8%AE%D9%8A%D9%85%D8%A9-%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%A9-Escd/162001951073508" target="_blank" >
+                        <img src="images/sponsored2.JPG" alt="Shobra puplic library">
+                    </a>
+                    <p>Read a book at Shubra Public Library!</p>
+                </div>
+                <div class="activity">
+                    <p>Use the device for a limit less than 2 hours a day and get 2 hours free to read !</p>
+                </div>
+                <div class="activity">
+                    <a href="https://badranfoundation.com/" target="_blank">
+                        <img src="images/badran.jpg" alt="Ibrahim badran foundation">
+                    </a>
+                    <p>Spread hope and volunteer with Ibrahim Badran Foundation!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="confirmation-message" class="hidden">
+        <div class="confirmation-content">
+            <p>Are you sure you want to unlock and finish the timer?</p>
+            <button id="confirm-unlock">Yes, Unlock</button>
+            <button id="cancel-unlock">Cancel</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-logo">
+            <img src="images/team-logo.png" alt="Team Logo">
+        </div>
+        <div class="footer-content">
+            <a href="https://www.facebook.com/profile.php?id=61557877606192" class="social-link">Facebook</a>
+            <a href="https://www.instagram.com/omar88naggar/" class="social-link">Instagram</a>
+            <p class="footer-text">Powered by TTT</p>
+        </div>
+    </footer>
+
+    <!-- Add the audio elements for alarm and bell sounds -->
+    <audio id="alarm-sound" src="sounds/alarm-sound.mp3" preload="auto" loop></audio>
+    <audio id="bell-sound" src="sounds/bell-sound.mp3" preload="auto"></audio>
+
+    <!-- Notification Bell -->
+    <div id="notification-bell" class="bell-icon">🔔</div>
+
+    <!-- Notification Popup -->
+    <div id="notification-popup">
+        <p>Time to stand up and take a walk!</p>
+        <button id="ok-button">OK</button>
+    </div>
+
+    <script>
+        let timer;
+        let endTime;
+        let remainingTime;
+
+        function requestFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { // Firefox
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE/Edge
+                elem.msRequestFullscreen();
+            }
+        }
+
+        function startTimer() {
+            const duration = parseInt(document.getElementById('duration').value, 10);
+            if (isNaN(duration) || duration <= 0) {
+                alert('Please enter a valid duration.');
+                return;
+            }
+
+            const currentTime = new Date().getTime();
+            endTime = currentTime + duration * 60 * 1000; // Convert minutes to milliseconds
+            remainingTime = duration * 60;
+            updateTimerDisplay();
+            timer = setInterval(updateTimer, 1000);
+            requestFullscreen();
+            document.getElementById('overlay').style.display = 'flex';
+            document.getElementById('unlock-button').classList.remove('finished'); // Reset button color
+            document.getElementById('unlock-button').textContent = 'Unlock and Finish Current Timer'; // Reset button text
+            document.getElementById('overlay-title').textContent = 'Device is Locked'; // Reset overlay title
+            document.getElementById('overlay-message').textContent = 'You can do other activities while the device is locked.'; // Reset overlay message
+            document.getElementById('stop-sound-button').classList.add('hidden'); // Hide stop sound button
+        }
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            remainingTime = Math.max(0, Math.floor((endTime - now) / 1000));
+            updateTimerDisplay();
+
+            if (remainingTime <= 0) {
+                clearInterval(timer);
+                document.getElementById('timer-display-overlay').textContent = '00m 00s'; // Show 00:00 when time is up
+                document.getElementById('overlay').style.display = 'flex'; // Show overlay when time is up
+                document.getElementById('unlock-button').classList.add('finished'); // Change button color to green
+                document.getElementById('unlock-button').textContent = 'Unlock Device'; // Change button text
+                document.getElementById('overlay-title').textContent = 'Time Ended'; // Change overlay title
+                document.getElementById('overlay-message').textContent = 'You can unlock your device now.'; // Change overlay message
+                document.getElementById('stop-sound-button').classList.remove('hidden'); // Show stop sound button
+
+                // Play the alarm sound on loop
+                document.getElementById('alarm-sound').play();
+            }
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            document.getElementById('timer-display-overlay').textContent = `${minutes}m ${seconds < 10 ? '0' : ''}${seconds}s`;
+        }
+
+        function showConfirmation() {
+            document.getElementById('confirmation-message').style.display = 'flex';
+        }
+
+        function unlockScreen() {
+            document.getElementById('confirmation-message').style.display = 'none';
+            clearInterval(timer);
+            document.getElementById('overlay').style.display = 'none';
+            document.exitFullscreen();
+
+            // Stop the alarm sound
+            stopAlarmSound();
+        }
+
+        function cancelUnlock() {
+            document.getElementById('confirmation-message').style.display = 'none';
+        }
+
+        function stopAlarmSound() {
+            const alarmSound = document.getElementById('alarm-sound');
+            alarmSound.pause();
+            alarmSound.currentTime = 0;
+            document.getElementById('stop-sound-button').classList.add('hidden'); // Hide stop sound button
+        }
+
+        document.getElementById('start-timer').addEventListener('click', startTimer);
+        document.getElementById('unlock-button').addEventListener('click', showConfirmation);
+
+        document.getElementById('confirm-unlock').addEventListener('click', unlockScreen);
+        document.getElementById('cancel-unlock').addEventListener('click', cancelUnlock);
+
+        document.getElementById('stop-sound-button').addEventListener('click', stopAlarmSound);
+
+        document.getElementById('toggle-theme').addEventListener('click', function() {
+            const darkModeEnabled = document.body.classList.toggle('dark-mode');
+            this.textContent = darkModeEnabled ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+            localStorage.setItem('dark-mode', darkModeEnabled ? 'enabled' : 'disabled');
+        });
+
+        window.addEventListener('load', () => {
+            const darkModeEnabled = localStorage.getItem('dark-mode') === 'enabled';
+            document.body.classList.toggle('dark-mode', darkModeEnabled);
+            document.getElementById('toggle-theme').textContent = darkModeEnabled ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+        });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const notificationBell = document.getElementById('notification-bell');
+    const notificationPopup = document.getElementById('notification-popup');
+    const okButton = document.getElementById('ok-button');
+    const bellSound = document.getElementById('bell-sound');
+
+    // Function to show the notification popup and play the bell sound
+    function showNotification() {
+        notificationPopup.style.display = 'block';
+        bellSound.play();
+        setTimeout(() => {
+            notificationPopup.style.display = 'none';
+        }, 5000); // Popup displays for 5 seconds
+    }
+
+    // Show notification every 10 seconds
+    setInterval(showNotification, 120000);
+
+    // Hide notification when "OK" button is clicked
+    okButton.addEventListener('click', function () {
+        notificationPopup.style.display = 'none';
+    });
+});
+
+// JavaScript code to hide the "Stop Sound" button when clicked
+
+document.addEventListener('DOMContentLoaded', () => {
+    const stopSoundButton = document.getElementById('stop-sound-button');
+
+    if (stopSoundButton) {
+        stopSoundButton.addEventListener('click', () => {
+            stopSoundButton.style.display = 'none';
+        });
+    }
+});
+    </script>
+</body>
+</html>

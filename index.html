@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Time Limiter</title>
+    <link rel="icon" href="images/teamlogo.jpg">
+    <link rel="stylesheet" href="styles1.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="images/team-logo.png" alt="Team Logo">
+        </div>
+        <div class="nav-buttons">
+            <a href="limiter.html" class="nav-button">Screen Limiter</a>
+            <a href="locker.html" class="nav-button">Screen Locker</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>Screen Time Limiter</h1>
+        <div class="input-group">
+            <label for="duration">Set Duration (minutes):</label>
+            <input type="number" id="duration" min="1">
+            <button id="add-timer">Add Timer</button>
+            <button id="reduce-timer">Reduce Timer</button>
+        </div>
+        <!-- Timer display on the main screen -->
+        <div id="timer-display">00m 00s</div>
+        <div id="total-limit-display">Total Limit: 00m 00s</div>
+        <button id="toggle-theme">Switch to Dark Mode</button>
+    </div>
+
+    <div id="overlay" class="hidden">
+        <div class="overlay-content">
+            <h2 id="overlay-title">You have reached your limit.</h2>
+            <p id="overlay-message">Please turn off the device and try doing some activities.</p>
+            <button id="unlock-button">Unlock and Add More Time</button>
+            <button id="stop-sound-button" class="hidden">Stop Sound</button>
+            <!-- New activity suggestions section -->
+            <div id="activity-suggestions">
+                <h3>Suggestions for Activities</h3>
+                <div class="activity">
+                    <img src="images/stretching.jpg" alt="Stretching">
+                    <p>Stretching exercises to keep you flexible.</p>
+                </div>
+                <div class="activity">
+                    <img src="images/Reading.png" alt="Reading">
+                    <p>Read a book or an article to relax your mind.</p>
+                </div>
+                <div class="activity">
+                    <img src="images/walking.jpg" alt="Walking">
+                    <p>Go for a walk or take a short jog to stay active.</p>
+                </div>
+                <div class="activity">
+                    <img src="images/meditation.jpg" alt="Meditation">
+                    <p>Practice meditation or deep breathing exercises.</p>
+                </div>
+                <div class="activity">
+                    <img src="images/cooking.jpg" alt="Cooking">
+                    <p>Try out a new recipe or prepare a healthy meal.</p>
+                </div>
+                <div class="activity">
+                    <a href="https://www.alahlyegypt.com/en" target="_blank">
+                        <img src="images/sponsored1.png" alt="Al Ahly">
+                    </a>
+                    <p>Visit Al Ahly club!</p>
+                </div>           
+                <div>
+                <div class="activity">
+                        <p>This week offer: Lock your device for 12 hours to get a day ticket for free and visit Al Ahly club!</p>
+                    </div>
+                <div class="activity">
+                    <a href="https://www.facebook.com/pages/%D9%85%D9%83%D8%AA%D8%A8%D8%A9-%D8%B4%D8%A8%D8%B1%D8%A7-%D8%A7%D9%84%D8%AE%D9%8A%D9%85%D8%A9-%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%A9-Escd/162001951073508" target="_blank" >
+                        <img src="images/sponsored2.JPG" alt="Shobra puplic library">
+                    </a>
+                    <p>Read a book at Shubra Public Library!</p>
+                </div>
+                <div class="activity">
+                    <p>Use the device for a limit less than 2 hours a day and get 2 hours free to read !</p>
+                </div>
+                <div class="activity">
+                    <a href="https://badranfoundation.com/" target="_blank">
+                        <img src="images/badran.jpg" alt="Ibrahim badran foundation">
+                    </a>
+                    <p>Spread hope and volunteer with Ibrahim Badran Foundation!</p>
+                </div>
+                </div>     
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmation-message" class="hidden">
+        <div class="confirmation-content">
+            <p id="confirmation-text">Are you sure you want to add more time?</p>
+            <button id="confirm-add-time">Yes, Add Time</button>
+            <button id="confirm-reduce-time">Yes, Reduce Time</button>
+            <button id="cancel-time-change">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Add the audio elements for alarm and bell sounds -->
+    <audio id="alarm-sound" src="sounds/alarm-sound.mp3" preload="auto" loop></audio>
+    <audio id="bell-sound" src="sounds/bell-sound.mp3" preload="auto"></audio>
+
+    <!-- Notification Bell -->
+    <div id="notification-bell" class="bell-icon">🔔</div>
+
+    <!-- Notification Popup -->
+    <div id="notification-popup">
+        <p>Time to stand up and take a walk!</p>
+        <button id="ok-button">OK</button>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-logo">
+            <img src="images/team-logo.png" alt="Team Logo">
+        </div>
+        <div class="footer-content">
+            <a href="https://www.facebook.com/profile.php?id=61557877606192" class="social-link">Facebook</a>
+            <a href="https://www.instagram.com/omar88naggar/" class="social-link">Instagram</a>
+            <p class="footer-text">Powered by TTT</p>
+        </div>
+    </footer>
+    
+</body>
+</html>
+
+    <script>
+        let timer;
+        let elapsedTime = 0; // Initialize elapsed time
+        let totalDuration = 0; // Initialize total duration
+        let notificationInterval = 60; // Notification interval in seconds
+        let notificationTimer;
+
+        function requestFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { // Firefox
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE/Edge
+                elem.msRequestFullscreen();
+            }
+        }
+
+        function startTimer() {
+            const duration = parseInt(document.getElementById('duration').value, 10);
+            if (isNaN(duration) || duration <= 0) {
+                alert('Please enter a valid duration.');
+                return;
+            }
+
+            // Extend timer if it's already running
+            if (elapsedTime > 0) {
+                totalDuration += duration * 60; // Add new duration to existing limit
+            } else {
+                totalDuration = duration * 60; // Set total duration for the first time
+            }
+
+            clearInterval(timer);
+            clearInterval(notificationTimer); // Clear any existing notification timer
+
+            timer = setInterval(() => {
+                elapsedTime++;
+                updateTimerDisplay(); // Update timer display on main screen only
+
+                if (elapsedTime >= totalDuration) {
+                    clearInterval(timer);
+                    clearInterval(notificationTimer); // Stop notifications
+                    document.getElementById('overlay').style.display = 'flex'; // Show overlay when time is up
+                    document.getElementById('unlock-button').classList.add('finished'); // Change button color to green
+                    document.getElementById('unlock-button').textContent = 'Unlock Device'; // Change button text
+                    document.getElementById('overlay-title').textContent = 'Time Ended'; // Change overlay title
+                    document.getElementById('overlay-message').textContent = 'You have reached your limit. Please turn off the device and try doing some activities.'; // Change overlay message
+                    document.getElementById('stop-sound-button').classList.remove('hidden'); // Show stop sound button
+
+                    document.getElementById('alarm-sound').play();
+
+                    // Add a short delay before requesting fullscreen
+                    setTimeout(() => {
+                        requestFullscreen();
+                    }, 100); // 100 ms delay
+                }
+            }, 1000); // Update every second
+
+            // Start notification timer
+            notificationTimer = setInterval(() => {
+                playNotificationSound();
+            }, notificationInterval * 1000); // Convert seconds to milliseconds
+
+            document.getElementById('overlay').style.display = 'none'; // Hide overlay initially
+            document.getElementById('unlock-button').classList.remove('finished'); // Reset button color
+            document.getElementById('unlock-button').textContent = 'Unlock and Add More Time'; // Reset button text
+            document.getElementById('overlay-title').textContent = 'Device is Locked'; // Reset overlay title
+            document.getElementById('overlay-message').textContent = 'You can do other activities while the device is locked.'; // Reset overlay message
+            document.getElementById('stop-sound-button').classList.add('hidden'); // Hide stop sound button
+
+            updateTotalLimitDisplay(); // Update total limit display
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(elapsedTime / 60);
+            const seconds = elapsedTime % 60;
+            document.getElementById('timer-display').textContent = `${minutes}m ${seconds < 10 ? '0' : ''}${seconds}s`;
+        }
+
+        function updateTotalLimitDisplay() {
+            const totalMinutes = Math.floor(totalDuration / 60);
+            const totalSeconds = totalDuration % 60;
+            document.getElementById('total-limit-display').textContent = `Total Limit: ${totalMinutes}m ${totalSeconds < 10 ? '0' : ''}${totalSeconds}s`;
+        }
+
+        function showConfirmation(action) {
+            const confirmationText = action === 'add' ? 'Are you sure you want to add more time?' : 'Are you sure you want to reduce the time?';
+            document.getElementById('confirmation-text').textContent = confirmationText;
+            document.getElementById('confirmation-message').style.display = 'flex';
+            document.getElementById('confirm-add-time').style.display = action === 'add' ? 'inline-block' : 'none';
+            document.getElementById('confirm-reduce-time').style.display = action === 'reduce' ? 'inline-block' : 'none';
+        }
+
+        function addTime() {
+            document.getElementById('confirmation-message').style.display = 'none';
+            startTimer(); // Restart the timer with the added time
+        }
+
+        function reduceTime() {
+            const duration = parseInt(document.getElementById('duration').value, 10);
+            if (isNaN(duration) || duration <= 0) {
+                alert('Please enter a valid duration.');
+                return;
+            }
+            
+            if (totalDuration <= duration * 60) {
+                alert('Cannot reduce time below the current total duration.');
+                return;
+            }
+
+            totalDuration -= duration * 60; // Reduce total duration
+            elapsedTime = Math.min(elapsedTime, totalDuration); // Adjust elapsed time if necessary
+            updateTimerDisplay(); // Update timer display on main screen
+            updateTotalLimitDisplay(); // Update total limit display
+
+            document.getElementById('confirmation-message').style.display = 'none'; // Hide confirmation message
+        }
+
+        function unlockScreen() {
+            document.getElementById('confirmation-message').style.display = 'none';
+            clearInterval(timer);
+            clearInterval(notificationTimer); // Stop notifications
+            document.getElementById('overlay').style.display = 'none';
+            document.exitFullscreen();
+
+            // Stop the alarm sound
+            stopAlarmSound();
+        }
+
+        function cancelTimeChange() {
+            document.getElementById('confirmation-message').style.display = 'none';
+        }
+
+        function stopAlarmSound() {
+            const alarmSound = document.getElementById('alarm-sound');
+            alarmSound.pause();
+            alarmSound.currentTime = 0;
+            document.getElementById('stop-sound-button').classList.add('hidden'); // Hide stop sound button
+        }
+
+        document.getElementById('add-timer').addEventListener('click', () => showConfirmation('add'));
+        document.getElementById('reduce-timer').addEventListener('click', () => showConfirmation('reduce'));
+        document.getElementById('confirm-add-time').addEventListener('click', addTime);
+        document.getElementById('confirm-reduce-time').addEventListener('click', reduceTime);
+        document.getElementById('cancel-time-change').addEventListener('click', cancelTimeChange);
+        document.getElementById('unlock-button').addEventListener('click', unlockScreen);
+        document.getElementById('stop-sound-button').addEventListener('click', stopAlarmSound);
+
+        document.getElementById('toggle-theme').addEventListener('click', function() {
+            const darkModeEnabled = document.body.classList.toggle('dark-mode');
+            this.textContent = darkModeEnabled ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+            localStorage.setItem('dark-mode', darkModeEnabled ? 'enabled' : 'disabled');
+        });
+
+        window.addEventListener('load', () => {
+            const darkModeEnabled = localStorage.getItem('dark-mode') === 'enabled';
+            document.body.classList.toggle('dark-mode', darkModeEnabled);
+            document.getElementById('toggle-theme').textContent = darkModeEnabled ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+    const notificationBell = document.getElementById('notification-bell');
+    const notificationPopup = document.getElementById('notification-popup');
+    const okButton = document.getElementById('ok-button');
+
+    // Function to show the notification popup
+    function showNotification() {
+        notificationPopup.style.display = 'block';
+        setTimeout(() => {
+            notificationPopup.style.display = 'none';
+        }, 5000); // Popup displays for 5 seconds
+    }
+
+    // Show notification every 10 seconds
+    setInterval(showNotification, 1800000);
+
+    // Hide notification when "OK" button is clicked
+    okButton.addEventListener('click', function () {
+        notificationPopup.style.display = 'none';
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const notificationBell = document.getElementById('notification-bell');
+    const notificationPopup = document.getElementById('notification-popup');
+    const okButton = document.getElementById('ok-button');
+    const bellSound = document.getElementById('bell-sound');
+
+    // Function to show the notification popup and play the bell sound
+    function showNotification() {
+        notificationPopup.style.display = 'block';
+        bellSound.play();
+        setTimeout(() => {
+            notificationPopup.style.display = 'none';
+        }, 5000); // Popup displays for 5 seconds
+    }
+
+    // Show notification every 10 seconds
+    setInterval(showNotification, 120000);
+
+    // Hide notification when "OK" button is clicked
+    okButton.addEventListener('click', function () {
+        notificationPopup.style.display = 'none';
+    });
+});
+
+// JavaScript code to hide the "Stop Sound" button when clicked
+
+document.addEventListener('DOMContentLoaded', () => {
+    const stopSoundButton = document.getElementById('stop-sound-button');
+
+    if (stopSoundButton) {
+        stopSoundButton.addEventListener('click', () => {
+            stopSoundButton.style.display = 'none';
+        });
+    }
+});
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const offerButtons = document.querySelectorAll('.offer-toggle');
+
+        offerButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const offerContent = this.nextElementSibling;
+                if (offerContent.classList.contains('hidden')) {
+                    offerContent.classList.remove('hidden');
+                    this.textContent = 'Hide Offer';
+                } else {
+                    offerContent.classList.add('hidden');
+                    this.textContent = 'Show Offer';
+                }
+            });
+        });
+    });
+
+
+    </script>
+</body>
+</html>
